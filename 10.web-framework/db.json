@@ -2,38 +2,7 @@
   "users": [
     {
       "id": 1,
-      "age": 1999,
-      "name": "NEW NAME"
-    },
-    {
-      "name": "Billy",
-      "age": 1,
-      "id": 2
-    },
-    {
-      "name": "Billy",
-      "age": 1,
-      "id": 3
-    },
-    {
-      "name": "Billy",
-      "age": 1,
-      "id": 4
-    },
-    {
-      "name": "Billy",
-      "age": 1,
-      "id": 5
-    },
-    {
-      "name": "Billy",
-      "age": 1,
-      "id": 6
-    },
-    {
-      "name": "Billy",
-      "age": 1,
-      "id": 7
+      "name": "Jim"
     }
   ]
 }

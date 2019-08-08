@@ -1,41 +1,74 @@
 import axios, { AxiosResponse } from "axios";
 import { Eventing } from "./Eventing";
+import { Sync } from "./Sync";
+import { Attributes } from "./Attributes";
 
-type UserProps = {
+type Callback = () => void;
+
+export type UserProps = {
   id?: number;
   name?: string;
   age?: number;
 };
 
+const API_END_POINT = "http://localhost:3000/users";
 export class User {
-  private API_END_POINT: string = "http://localhost:3000/users";
-  // we kind of hard code the Eventing class because it's unlikely to change
+  // we kind of hard code these class because they are unlikely to change
   public events: Eventing = new Eventing();
-  constructor(private data: UserProps) {}
+  public sync: Sync<UserProps> = new Sync(API_END_POINT);
+  public attributes: Attributes<UserProps>;
 
-  get(key: string): string | number {
-    return this.data[key];
+  constructor(userProps: UserProps) {
+    this.attributes = new Attributes(userProps);
   }
 
-  set(props: UserProps): void {
-    Object.assign(this.data, props);
+  // bad example of deligation, because we need to lookup and
+  // use the same signature. Andlater we need to change in two places
+  // on(eventName: string, callback: Callback): void {
+  //   this.events.on(eventName, callback);
+  // }
+
+  get on() {
+    return this.events.on;
   }
 
-  fetch(): void {
-    axios.get(`${this.API_END_POINT}/${this.get("id")}`).then(
-      (response: AxiosResponse<UserProps>): void => {
-        console.log(response.data);
-        this.set(response.data);
-      }
-    );
+  get trigger() {
+    return this.events.trigger;
   }
 
-  save(): void {
-    const id = this.get("id");
-    if (id) {
-      axios.put(`${this.API_END_POINT}/${id}`, this.data);
-    } else {
-      axios.post(`${this.API_END_POINT}`, this.data);
+  get get() {
+    return this.attributes.get;
+  }
+
+  set = (props: UserProps) => {
+    this.attributes.set(props);
+    this.events.trigger("change");
+  };
+
+  fetch = () => {
+    const id = this.attributes.get("id");
+    if (typeof id !== "number") {
+      throw new Error("cannot fetch without id");
     }
+
+    this.sync.fetch(id).then(({ data }) => {
+      if (data) {
+        // we referenced this.set,
+        // because we want to trigger
+        // the change event
+        this.set(data);
+      }
+    });
+  };
+
+  save() {
+    this.sync
+      .save(this.attributes.getAll())
+      .then(response => {
+        this.trigger("save");
+      })
+      .catch(error => {
+        this.trigger("error");
+      });
   }
 }
