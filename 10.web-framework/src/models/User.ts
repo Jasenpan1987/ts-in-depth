@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { Eventing } from "./Eventing";
 
 type UserProps = {
   id?: number;
@@ -6,11 +7,10 @@ type UserProps = {
   age?: number;
 };
 
-type Callback = () => void;
-
 export class User {
-  private listeners: { [key: string]: Callback[] } = {};
   private API_END_POINT: string = "http://localhost:3000/users";
+  // we kind of hard code the Eventing class because it's unlikely to change
+  public events: Eventing = new Eventing();
   constructor(private data: UserProps) {}
 
   get(key: string): string | number {
@@ -19,20 +19,6 @@ export class User {
 
   set(props: UserProps): void {
     Object.assign(this.data, props);
-  }
-
-  on(eventName: string, callback: Callback) {
-    this.listeners[eventName] = [
-      ...(this.listeners[eventName] || []),
-      callback
-    ];
-  }
-
-  trigger(eventName: string) {
-    const handlers = this.listeners[eventName] || [];
-    for (let handler of handlers) {
-      handler();
-    }
   }
 
   fetch(): void {
