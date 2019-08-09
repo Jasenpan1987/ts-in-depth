@@ -29,17 +29,9 @@ export class Model<T extends IMaybeIdentifyable> {
     private sync: ISync<T>
   ) {}
 
-  get on() {
-    return this.events.on;
-  }
-
-  get trigger() {
-    return this.events.trigger;
-  }
-
-  get get() {
-    return this.attributes.get;
-  }
+  on = this.events.on;
+  trigger = this.events.trigger;
+  get = this.attributes.get;
 
   set = (props: T) => {
     this.attributes.set(props);

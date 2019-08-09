@@ -10,6 +10,7 @@ export type UserProps = {
 };
 
 const API_END_POINT = "http://localhost:3000/users";
+
 export class User extends Model<UserProps> {
   static createUser = (attrs: UserProps): User => {
     return new User(
@@ -18,4 +19,9 @@ export class User extends Model<UserProps> {
       new ApiSync<UserProps>(API_END_POINT)
     );
   };
+
+  // users own methods
+  isAdminUser(): boolean {
+    return this.get("id") === 1;
+  }
 }
