@@ -4,7 +4,7 @@ interface IMaybeIdentifyable {
   id?: number;
 }
 
-export class Sync<T extends IMaybeIdentifyable> {
+export class ApiSync<T extends IMaybeIdentifyable> {
   constructor(private API_END_POINT: string) {}
 
   fetch = (id: number): AxiosPromise<T> => {
