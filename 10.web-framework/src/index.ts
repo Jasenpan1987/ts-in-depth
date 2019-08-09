@@ -1,19 +1,10 @@
 import { User } from "./models/User";
 
-const user = User.createUser({ id: 1 });
+// const user = User.createUser({ name: "Jasen", age: 100 });
+// user.save();
 
-user.on("change", () => {
-  console.log(user.get("name"));
+const users = User.createUserCollection();
+users.fetch();
+users.on("change", () => {
+  console.log(users.collection);
 });
-
-user.on("save", () => {
-  console.log(user);
-});
-
-user.fetch();
-
-user.set({ name: "Tom" });
-
-user.save();
-
-user.get("name");

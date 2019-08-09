@@ -1,26 +1,10 @@
-import { AxiosPromise, AxiosResponse } from "axios";
-
-interface IAttributes<T> {
-  get<K extends keyof T>(key: K): T[K];
-  set(props: T): void;
-  getAll(): T;
-}
-
-interface ISync<T extends IMaybeIdentifyable> {
-  fetch(id: number): AxiosPromise<T>;
-  save(data: T): AxiosPromise<T>;
-}
-
-interface IMaybeIdentifyable {
-  id?: number;
-}
-
-type Callback = () => void;
-
-interface IEvents {
-  on(eventName: string, callback: Callback): void;
-  trigger(eventName: string): void;
-}
+import { AxiosResponse } from "axios";
+import {
+  IMaybeIdentifyable,
+  IAttributes,
+  IEvents,
+  ISync
+} from "../interfaceAndType/interface";
 
 export class Model<T extends IMaybeIdentifyable> {
   constructor(
@@ -29,6 +13,11 @@ export class Model<T extends IMaybeIdentifyable> {
     private sync: ISync<T>
   ) {}
 
+  // be careful!!!!
+  // if we want to initialize the events, attributes instance
+  // in side the constructor rather than what we have above,
+  // passing the instance directly into the constructor, we
+  // cannot use the on = xxx syntax below, it will give error
   on = this.events.on;
   trigger = this.events.trigger;
   get = this.attributes.get;
