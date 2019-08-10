@@ -1,17 +1,28 @@
 import { User } from "./models/User";
 import { UserEdit } from "./views/UserEdit";
+import { UserList } from "./views/UserList";
 // import { UserForm } from "./views/UserForm";
 
-const user = User.createUser({ name: "Jasen", age: 100 });
+// const root = document.getElementById("content");
 
-// const users = User.createUserCollection();
-// users.fetch();
-// users.on("change", () => {
-//   console.log(users.collection);
+// const userCollection = User.createUserCollection();
+
+// userCollection.on("change", () => {
+//   new UserList(root, userCollection).render();
 // });
 
-// const userForm = new UserForm(document.getElementById("content"), user);
-// userForm.render();
+// userCollection.fetch();
 
-const userEdit = new UserEdit(document.getElementById("content"), user);
-userEdit.render();
+// const user = User.createUser({ name: "Jasen", age: 100 });
+// const userEdit = new UserEdit(document.getElementById("content"), user);
+// userEdit.render();
+
+const root = document.getElementById("content");
+
+const userCollection = User.createUserCollection();
+
+userCollection.on("change", () => {
+  new UserList(root, userCollection).render();
+});
+
+userCollection.fetch();

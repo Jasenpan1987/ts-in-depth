@@ -2,7 +2,7 @@ import { IEvents, ISync } from "../interfaceAndType/interface";
 import Axios, { AxiosResponse } from "axios";
 
 export class Collection<T, P> {
-  public collection: T[] = [];
+  public items: T[] = [];
 
   constructor(
     private event: IEvents,
@@ -13,7 +13,7 @@ export class Collection<T, P> {
   fetch = (): void => {
     Axios.get(this.endPoint).then((response: AxiosResponse) => {
       response.data.forEach((record: P) => {
-        this.collection.push(this.deserialize(record));
+        this.items.push(this.deserialize(record));
       });
       this.event.trigger("change");
     });
