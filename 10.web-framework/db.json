@@ -3,11 +3,6 @@
     {
       "id": 1,
       "name": "Tom"
-    },
-    {
-      "name": "Jasen",
-      "age": 100,
-      "id": 2
     }
   ]
 }
